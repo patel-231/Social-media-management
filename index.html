@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Media Management Form</title>
+    <style>
+        body { font-family: sans-serif; background-color: #1a1a1a; color: #ffffff; display: flex; justify-content: center; padding: 20px; }
+        .form-container { background-color: #2d2d2d; padding: 25px; border-radius: 10px; width: 100%; max-width: 500px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+        h2 { text-align: center; color: #00ffcc; }
+        label { display: block; margin-top: 15px; font-weight: bold; }
+        input[type="text"], input[type="email"], input[type="tel"], input[type="number"], textarea { width: 100%; padding: 10px; margin-top: 5px; border: none; border-radius: 5px; box-sizing: border-box; }
+        .checkbox-group { margin: 15px 0; background: #3d3d3d; padding: 10px; border-radius: 5px; }
+        .checkbox-item { display: flex; align-items: center; margin: 8px 0; }
+        .checkbox-item input { margin-right: 10px; }
+        .reels-container { display: flex; flex-direction: column; width: 100%; margin: 5px 0; padding-left: 25px; }
+        .total-box { margin: 20px 0; padding: 15px; background: #00ffcc; color: #1a1a1a; text-align: center; font-weight: bold; border-radius: 5px; font-size: 1.2em; }
+        .button-group { display: flex; gap: 10px; }
+        button { flex: 1; padding: 12px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; }
+        .submit-btn { background-color: #00ffcc; color: #1a1a1a; }
+        .reset-btn { background-color: #555; color: #fff; }
+    </style>
+</head>
+<body>
+
+<div class="form-container">
+    <h2>Social Media Management</h2>
+    <form action="https://api.web3forms.com/submit" method="POST" id="serviceForm">
+        <input type="hidden" name="access_key" value="4361d093-e19f-47dc-b913-a9202700b9f8">
+
+        <label>Your Name</label>
+        <input type="text" name="name" required>
+
+        <label>Email ID</label>
+        <input type="email" name="email" required>
+
+        <label>Mobile Number</label>
+        <input type="tel" name="phone" required>
+
+        <label>Instagram Handle / Link</label>
+        <input type="text" name="instagram" placeholder="@yourusername or link" required>
+
+        <label>Select Services (₹/mo):</label>
+        <div class="checkbox-group" id="services">
+            <div class="checkbox-item"><input type="checkbox" name="service" value="2000" data-name="Lead generation"> Lead generation</div>
+            <div class="checkbox-item"><input type="checkbox" name="service" value="1500" data-name="Whatsapp funnel"> Whatsapp funnel</div>
+            
+            <div style="display:flex; flex-direction:column; width:100%;">
+                <div class="checkbox-item">
+                    <input type="checkbox" name="service" value="reels" id="reelsCheck" onchange="updateTotal()">
+                    Reels-post
+                </div>
+                <div id="reelsDetails" class="reels-container" style="display: none;">
+                    <label style="font-size: 0.8em; margin-top:5px;">How many reels per month?</label>
+                    <input type="number" name="reels_quantity" id="reelsQty" value="15" min="1" oninput="updateTotal()">
+                </div>
+            </div>
+
+            <div class="checkbox-item"><input type="checkbox" name="service" value="1000" data-name="Google business setup"> Google business setup </div>
+            <div class="checkbox-item"><input type="checkbox" name="service" value="500" data-name="Script for reel"> Script for reel</div>
+            <div class="checkbox-item"><input type="checkbox" name="service" value="1000" data-name="Strategy call"> Strategy call</div>
+            <div class="checkbox-item"><input type="checkbox" name="service" value="2000" data-name="SEO keyword mapping"> SEO keyword mapping </div>
+            <div class="checkbox-item"><input type="checkbox" name="service" value="800" data-name="Review management"> Review management</div>
+            <div class="checkbox-item"><input type="checkbox" name="service" value="1200" data-name="Story telling"> Story telling</div>
+            <div class="checkbox-item"><input type="checkbox" name="service" value="3000" data-name="Ad management"> Ad management</div>
+            <div class="checkbox-item"><input type="checkbox" name="service" value="1500" data-name="Email marketing setup"> Email marketing setup </div>
+            <div class="checkbox-item"><input type="checkbox" name="service" value="3500" data-name="Landing page"> Website or landing page</div>
+        </div>
+        <h4>IN FREE OF COST : CAPTION, HASTAG, POSTING, BIO, INSTAGRAM AUDIT</h4>
+
+        <div class="total-box">
+            Grand Total: ₹<span id="total">0</span> / month
+            <input type="hidden" name="Grand_Total" id="hiddenTotal" value="0">
+        </div>
+
+        <label>Any Extra Requirements?</label>
+        <textarea name="message"></textarea>
+
+        <div class="button-group">
+            <button type="submit" class="submit-btn">Submit Request</button>
+            <button type="reset" class="reset-btn" onclick="resetForm()">Reset</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    const checkboxes = document.querySelectorAll('#services input[type="checkbox"]');
+    const totalDisplay = document.getElementById('total');
+    const hiddenTotal = document.getElementById('hiddenTotal');
+    const reelsCheck = document.getElementById('reelsCheck');
+    const reelsDetails = document.getElementById('reelsDetails');
+    const reelsQty = document.getElementById('reelsQty');
+
+    function updateTotal() {
+        let total = 0;
+        
+        checkboxes.forEach(cb => {
+            if (cb.checked) {
+                if (cb.value === "reels") {
+                    total += (parseInt(reelsQty.value) * 500);
+                } else {
+                    total += parseInt(cb.value);
+                }
+            }
+        });
+
+        totalDisplay.innerText = total;
+        hiddenTotal.value = total;
+        reelsDetails.style.display = reelsCheck.checked ? 'flex' : 'none';
+    }
+
+    function resetForm() {
+        setTimeout(() => {
+            updateTotal();
+        }, 10);
+    }
+
+    checkboxes.forEach(cb => cb.addEventListener('change', updateTotal));
+</script>
+
+</body>
+  </html>
+  
